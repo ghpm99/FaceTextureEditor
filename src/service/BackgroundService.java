@@ -5,6 +5,7 @@
  */
 package service;
 
+import java.net.URL;
 import model.Background;
 
 /**
@@ -13,12 +14,12 @@ import model.Background;
  */
 public class BackgroundService {
     
-    private Background background;
-    
-    private String pathDefault = "E:\\Programacao\\FaceTextureEditor\\backgroundDefault.jpg";
+    private Background background; 
     
     public BackgroundService(){
         background = new Background();
+        URL pathDefault = this.getClass().getResource("images/backgroundDefault.jpg");
+        System.out.println("background:" + pathDefault);
         background.setImage(pathDefault);
     }
     

@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -17,9 +18,7 @@ import javax.imageio.ImageIO;
  *
  * @author ghpm9
  */
-public class FaceTexture {
-    
-    public final static String DEFAULTIMAGE = "E:\\Programacao\\FaceTextureEditor\\PNG\\vazio.png";
+public class FaceTexture {    
     
     private String name;
     private BufferedImage image;
@@ -43,8 +42,8 @@ public class FaceTexture {
         return resizeImage(image, width, height);
     }
 
-    private void setImage(BufferedImage image) {
-        this.image = image;
+    public void setImage(BufferedImage image) {        
+        this.image = resizeImage(image, 624, 804);
     }
 
     public int getOrder() {
@@ -75,9 +74,22 @@ public class FaceTexture {
     
     public void setImage(String path){
         try {
-            File filePath = new File(path);            
+            File filePath = new File(path);
+            System.out.println("filepath: " + filePath.getAbsolutePath());
             BufferedImage temp = ImageIO.read(filePath);            
-            setImage(resizeImage(temp, 624, 804));
+            setImage(temp);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(FaceTexture.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setImage(URL path){
+        try {
+            
+            System.out.println("filepath: " + path.getFile());
+            BufferedImage temp = ImageIO.read(path);            
+            setImage(temp);
             
         } catch (IOException ex) {
             Logger.getLogger(FaceTexture.class.getName()).log(Level.SEVERE, null, ex);

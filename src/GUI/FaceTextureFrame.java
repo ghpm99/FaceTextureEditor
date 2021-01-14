@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Util.ClassImages;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -205,7 +206,7 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
         });
         jPanel2.add(face14);
 
-        face15.setIcon(getIconFromFaceTexture(15));
+        face15.setIcon(getIconFromFaceTexture(14));
         face15.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 face15MouseClicked(evt);
@@ -581,12 +582,8 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
         return icon;
     }
 
-    private ComboBoxModel getClassBDO() {
-        String[] vector = {
-            "Warrior", "Ranger", "Sorceress", "Berserker", "Valkyrie", "Wizard", "Witch", "Tamer", "Maehwa", "Musa", "Ninja", "Kunoichi", "Dark Knight", "Striker", "Mystic", "Lahn", "Archer", "Shai", "Guardian", "Hashashin"
-        };
-
-        return new DefaultComboBoxModel(vector);
+    private ComboBoxModel getClassBDO() {        
+        return new DefaultComboBoxModel(ClassImages.getAllClass());
     }
 
     private void setIndexFaceTexture(MouseEvent event, int index) {

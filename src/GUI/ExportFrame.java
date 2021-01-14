@@ -5,9 +5,14 @@
  */
 package GUI;
 
+import java.awt.event.ItemEvent;
+import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import service.BackgroundService;
+import service.ExportService;
 import service.FaceTextureService;
 
 /**
@@ -18,12 +23,19 @@ public class ExportFrame extends javax.swing.JInternalFrame {
 
     private BackgroundService backgroundService;
     private FaceTextureService faceTextureService;
+    private ExportService exportService;
+
     /**
      * Creates new form ExportFrame
+     *
+     * @param backgroundService
+     * @param faceTextureService
      */
     public ExportFrame(BackgroundService backgroundService, FaceTextureService faceTextureService) {
         this.backgroundService = backgroundService;
         this.faceTextureService = faceTextureService;
+        this.exportService = new ExportService();
+        this.exportService.generateExport(faceTextureService.getFaceTextures());
         initComponents();
     }
 
@@ -36,36 +48,51 @@ public class ExportFrame extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        pathExportChooser = new javax.swing.JFileChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        previewLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
+        jProgressBar1 = new javax.swing.JProgressBar();
+
+        pathExportChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         setTitle("Exportar");
 
         jPanel1.setPreferredSize(new java.awt.Dimension(905, 655));
 
-        jLabel1.setMaximumSize(new java.awt.Dimension(905, 655));
-        jLabel1.setMinimumSize(new java.awt.Dimension(905, 655));
-        jLabel1.setPreferredSize(new java.awt.Dimension(905, 655));
+        previewLabel.setIcon(getIconFromBackground());
+        previewLabel.setMaximumSize(new java.awt.Dimension(905, 655));
+        previewLabel.setMinimumSize(new java.awt.Dimension(905, 655));
+        previewLabel.setPreferredSize(new java.awt.Dimension(905, 655));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(previewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(previewLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
         );
 
         jScrollPane1.setViewportView(jPanel1);
 
         jButton1.setText("Exportar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jCheckBox1.setText("Background");
+        jCheckBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBox1ItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -74,6 +101,7 @@ public class ExportFrame extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jCheckBox1)
@@ -85,8 +113,10 @@ public class ExportFrame extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
-                .addGap(57, 57, 57)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
+                .addGap(25, 25, 25)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jCheckBox1))
@@ -96,18 +126,54 @@ public class ExportFrame extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
+        // TODO add your handling code here:
+        jProgressBar1.setValue(0);
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            exportService.generateExport(backgroundService.getBackground(), faceTextureService.getFaceTextures());
+        } else {
+            exportService.generateExport(faceTextureService.getFaceTextures());
+        }
+        jProgressBar1.setValue(50);
+        previewLabel.setIcon(getIconFromBackground());
+        jProgressBar1.setValue(100);
+    }//GEN-LAST:event_jCheckBox1ItemStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        jProgressBar1.setValue(0);
+        File path = selectPath();
+        jProgressBar1.setValue(25);
+        exportService.export(faceTextureService.getFaceTextures(), path);
+        jProgressBar1.setValue(100);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private Icon getIconFromBackground() {
-        ImageIcon icon = new ImageIcon(backgroundService.getBackground().getBackground());
+        ImageIcon icon = new ImageIcon(exportService.getPreview());
 
         return icon;
     }
-    
+
+    private File selectPath() {
+
+        File fileReturn = null;        
+        int returnVal = pathExportChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File temp = pathExportChooser.getSelectedFile();
+            
+            fileReturn = temp;
+        }
+
+        return fileReturn;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JFileChooser pathExportChooser;
+    private javax.swing.JLabel previewLabel;
     // End of variables declaration//GEN-END:variables
 }

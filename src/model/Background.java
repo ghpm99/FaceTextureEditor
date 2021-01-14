@@ -9,6 +9,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -76,6 +77,15 @@ public class Background {
             BufferedImage temp = ImageIO.read(filePath);
             setBackground(temp);
 
+        } catch (IOException ex) {
+            Logger.getLogger(FaceTexture.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setImage(URL path){
+        try {            
+            BufferedImage temp = ImageIO.read(path);
+            setBackground(temp);
         } catch (IOException ex) {
             Logger.getLogger(FaceTexture.class.getName()).log(Level.SEVERE, null, ex);
         }
