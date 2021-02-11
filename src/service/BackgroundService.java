@@ -5,6 +5,8 @@
  */
 package service;
 
+import DIP.DigitalImageProcessing;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import model.Background;
 
@@ -13,20 +15,48 @@ import model.Background;
  * @author ghpm9
  */
 public class BackgroundService {
-    
-    private Background background; 
-    
-    public BackgroundService(){
+
+    private Background background;
+    private DigitalImageProcessing digitalImageProcessing;
+
+    public BackgroundService(String defaultImage,int width, int height) {
         background = new Background();
-        URL pathDefault = this.getClass().getResource("images/backgroundDefault.jpg");
+        digitalImageProcessing = new DigitalImageProcessing(width, height);
+        URL pathDefault = this.getClass().getResource(defaultImage);
         System.out.println("background:" + pathDefault);
-        background.setImage(pathDefault);
+        setImage(pathDefault);
+        reset();
     }
-    
-    public Background getBackground(){
-        return background;
+
+    public void setImage(String path) {
+        this.background.setImage(path);
+        reset();
     }
-    
-    
-    
+
+    public void setImage(URL path) {
+        this.background.setImage(path);
+        reset();
+    }
+
+    public void moveX(int x) {
+        digitalImageProcessing.moveX(x);
+    }
+
+    public void moveY(int y) {
+        digitalImageProcessing.moveY(y);
+    }
+
+    public void setZoom(double zoom) {
+        digitalImageProcessing.setZoom(zoom);
+    }
+
+    public BufferedImage getBackground() {
+        return digitalImageProcessing.getImageProcessing(background.getBackground());
+    }
+
+    private void reset() {
+
+        digitalImageProcessing.reset(this.background.getBackground().getWidth(), this.background.getBackground().getHeight(), 905, 655);
+    }
+
 }

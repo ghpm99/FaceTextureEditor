@@ -13,7 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,20 +51,24 @@ public class SaveService {
         prop = new Properties();
     }
 
-    public void save(FaceTexture[] faceTexture) {
+    public void save(ArrayList<FaceTexture> faceTexture) {
         try {
-            prop.setProperty("length", String.valueOf(faceTexture.length));
-            for (int i = 0; i < faceTexture.length; i++) {
+            prop.setProperty("length", String.valueOf(faceTexture.size()));
+            Iterator ite = faceTexture.iterator();
+            
+            while(ite.hasNext()){
+                FaceTexture temp = (FaceTexture) ite.next();
+                int index = faceTexture.indexOf(temp);
+                
+                String pathImage = path + "save/" + index + ".bmp";
+                saveImage(temp.getImage(), pathImage);
 
-                String pathImage = path + "save/" + i + ".bmp";
-                saveImage(faceTexture[i].getImage(), pathImage);
-
-                prop.setProperty("name" + i, faceTexture[i].getName());
-                prop.setProperty("image" + i, pathImage);
-                prop.setProperty("class" + i, faceTexture[i].getClasse());
-                prop.setProperty("show" + i, faceTexture[i].isShowClasse() ? "0" : "1");
-
-            }
+                prop.setProperty("name" + index, temp.getName());
+                prop.setProperty("image" + index, pathImage);
+                prop.setProperty("class" + index, temp.getClasse());
+                prop.setProperty("show" + index, temp.isShowClasse() ? "0" : "1");
+            }            
+            
 
             prop.store(new FileOutputStream(saveFile), new Date().toString());
         } catch (FileNotFoundException ex) {
@@ -72,14 +78,14 @@ public class SaveService {
         }
     }
 
-    public FaceTexture[] load() {
-        FaceTexture[] faceTextures;
+    public ArrayList<FaceTexture> load() {        
+        ArrayList<FaceTexture> faceTextures = new ArrayList<>();
         try {
             prop.load(new FileInputStream(saveFile));
             int length = Integer.valueOf(prop.getProperty("length"));
-            faceTextures = new FaceTexture[length];
+            
 
-            for (int i = 0; i < faceTextures.length; i++) {
+            for (int i = 0; i < length; i++) {
                 FaceTexture temp = new FaceTexture();
                 temp.setName(prop.getProperty("name" + i));
                 temp.setClasse(prop.getProperty("class" + i));
@@ -87,12 +93,13 @@ public class SaveService {
 
                 temp.setImage(prop.getProperty("image" + i));
 
-                faceTextures[i] = temp;
+                faceTextures.add(temp);
             }
 
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(SaveService.class.getName()).log(Level.SEVERE, null, ex);
-            faceTextures = new FaceTextureService().generateDefault();
+            
+            
         }
         return faceTextures;
     }

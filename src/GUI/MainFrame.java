@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import service.BackgroundService;
 import service.FaceTextureService;
 import service.SaveService;
@@ -18,17 +20,17 @@ public class MainFrame extends javax.swing.JFrame {
     private FaceTextureService faceTextureService;
     private BackgroundService backgroundService;
     private SaveService saveService;
+    private final String version = "Versão 0.01B";
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
         this.faceTextureService = new FaceTextureService();
-        this.faceTextureService.setFaceTexture(this.faceTextureService.generateDefault());
-        this.backgroundService = new BackgroundService();
-        this.saveService = new SaveService();        
+        
+        this.backgroundService = new BackgroundService("images/backgroundDefault.jpg",905,655);                
         initComponents();
-
+        load();
     }
 
     /**
@@ -40,47 +42,53 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        faceTextureChooser = new javax.swing.JFileChooser();
+        aboutDialog = new javax.swing.JDialog();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        versionLabel = new javax.swing.JLabel();
         deskPanel = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        loadMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         cutMenuItem = new javax.swing.JMenuItem();
         faceTextureMenuItem = new javax.swing.JMenuItem();
         exportMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
-        contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
+
+        aboutDialog.setTitle("Sobre");
+        aboutDialog.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        aboutDialog.setMinimumSize(new java.awt.Dimension(400, 300));
+        aboutDialog.setModal(true);
+        aboutDialog.setResizable(false);
+        aboutDialog.setType(java.awt.Window.Type.POPUP);
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Face Texture Editor");
+        aboutDialog.getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Programado por Guilherme.\n\nKaworiChan#8102");
+        jScrollPane1.setViewportView(jTextArea1);
+
+        aboutDialog.getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        versionLabel.setText("jLabel2");
+        aboutDialog.getContentPane().add(versionLabel, java.awt.BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Face Texture Editor");
+        setExtendedState(MAXIMIZED_BOTH);
         setMinimumSize(new java.awt.Dimension(930, 736));
         setPreferredSize(new java.awt.Dimension(1366, 768));
         getContentPane().add(deskPanel, java.awt.BorderLayout.CENTER);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
-
-        loadMenuItem.setMnemonic('o');
-        loadMenuItem.setText("Load");
-        loadMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(loadMenuItem);
-
-        saveMenuItem.setMnemonic('s');
-        saveMenuItem.setText("Save");
-        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(saveMenuItem);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -128,12 +136,13 @@ public class MainFrame extends javax.swing.JFrame {
         helpMenu.setMnemonic('h');
         helpMenu.setText("Help");
 
-        contentsMenuItem.setMnemonic('c');
-        contentsMenuItem.setText("Contents");
-        helpMenu.add(contentsMenuItem);
-
         aboutMenuItem.setMnemonic('a');
         aboutMenuItem.setText("About");
+        aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(aboutMenuItem);
 
         menuBar.add(helpMenu);
@@ -148,12 +157,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void faceTextureMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faceTextureMenuItemActionPerformed
-        // TODO add your handling code here:
-//        int returnVal = faceTextureChooser.showOpenDialog(this);
-//        if(returnVal == JFileChooser.APPROVE_OPTION){
-//            File file = faceTextureChooser.getSelectedFile();
-//            
-//        }
+        
         FaceTextureFrame faceTextureFrame = new FaceTextureFrame(faceTextureService, backgroundService);
 
         faceTextureFrame.setClosable(true);
@@ -163,6 +167,8 @@ public class MainFrame extends javax.swing.JFrame {
         deskPanel.add(faceTextureFrame);
 
         faceTextureFrame.setVisible(true);
+        
+        faceTextureFrame.addInternalFrameListener(getEventOnClosed());
     }//GEN-LAST:event_faceTextureMenuItemActionPerformed
 
     private void cutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cutMenuItemActionPerformed
@@ -176,7 +182,7 @@ public class MainFrame extends javax.swing.JFrame {
         deskPanel.add(backgroundFrame);
 
         backgroundFrame.setVisible(true);
-
+        
     }//GEN-LAST:event_cutMenuItemActionPerformed
 
     private void exportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMenuItemActionPerformed
@@ -192,31 +198,42 @@ public class MainFrame extends javax.swing.JFrame {
         exportFrame.setVisible(true);
     }//GEN-LAST:event_exportMenuItemActionPerformed
 
-    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+    private void aboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutMenuItemActionPerformed
         // TODO add your handling code here:
-        saveService.save(faceTextureService.getFaceTextures());
-    }//GEN-LAST:event_saveMenuItemActionPerformed
+        versionLabel.setText(version);
+        aboutDialog.setVisible(true);
+    }//GEN-LAST:event_aboutMenuItemActionPerformed
 
-    private void loadMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMenuItemActionPerformed
-        // TODO add your handling code here:
+    private InternalFrameAdapter getEventOnClosed(){
+        return new InternalFrameAdapter() {
+            @Override
+            public void internalFrameClosing(InternalFrameEvent e){
+                saveService.save(faceTextureService.getFaceTextures());
+            }
+        };
+    }
+    
+    private void load(){
+        this.saveService = new SaveService();
         faceTextureService.setFaceTexture(saveService.load());
-    }//GEN-LAST:event_loadMenuItemActionPerformed
-
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog aboutDialog;
     private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentsMenuItem;
     private javax.swing.JMenuItem cutMenuItem;
     private javax.swing.JDesktopPane deskPanel;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenuItem exportMenuItem;
-    private javax.swing.JFileChooser faceTextureChooser;
     private javax.swing.JMenuItem faceTextureMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuItem loadMenuItem;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JLabel versionLabel;
     // End of variables declaration//GEN-END:variables
 
 }

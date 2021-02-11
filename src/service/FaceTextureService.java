@@ -6,6 +6,7 @@
 package service;
 
 import java.net.URL;
+import java.util.ArrayList;
 import model.FaceTexture;
 
 /**
@@ -14,15 +15,7 @@ import model.FaceTexture;
  */
 public class FaceTextureService {
 
-    private FaceTexture[] facesTexture;
-
-    public FaceTexture[] generateDefault() {
-        FaceTexture[] defaultFaceTexture = new FaceTexture[28];
-        for (int i = 0; i < defaultFaceTexture.length; i++) {
-            defaultFaceTexture[i] = generateDefaultFaceTexture();
-        }
-        return defaultFaceTexture;
-    }
+    private ArrayList<FaceTexture> facesTexture = new ArrayList<>();   
 
     private FaceTexture generateDefaultFaceTexture() {
         
@@ -39,15 +32,19 @@ public class FaceTextureService {
     }
 
     public FaceTexture getFaceTexture(int index) {
-        return facesTexture[index];
+        return facesTexture.get(index);
     }
 
-    public FaceTexture[] getFaceTextures() {
+    public ArrayList<FaceTexture> getFaceTextures() {
         return facesTexture;
     }
 
-    public void setFaceTexture(FaceTexture[] faceTexture) {
+    public void setFaceTexture(ArrayList<FaceTexture> faceTexture) {
         this.facesTexture = faceTexture;
     }
 
+    public void addFaceTexture(FaceTexture faceTexture){
+        facesTexture.add(faceTexture);
+    }
+    
 }

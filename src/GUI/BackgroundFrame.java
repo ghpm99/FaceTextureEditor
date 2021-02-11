@@ -6,12 +6,10 @@
 package GUI;
 
 import java.awt.Cursor;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import service.BackgroundService;
@@ -23,7 +21,7 @@ import service.BackgroundService;
 public class BackgroundFrame extends javax.swing.JInternalFrame {
 
     private BackgroundService backgroundService;
-    private boolean active = false;
+    
     private int x,y;
 
     /**
@@ -51,7 +49,8 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
         jButton1 = new javax.swing.JButton();
 
         setTitle("Background");
-        setMaximumSize(new java.awt.Dimension(930, 790));
+        setMaximumSize(new java.awt.Dimension(1100, 800));
+        setPreferredSize(null);
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(905, 655));
 
@@ -88,9 +87,7 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(backgroundImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
+            .addComponent(backgroundImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,6 +97,8 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
         );
 
         jScrollPane1.setViewportView(jPanel4);
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jButton1.setText("Alterar Imagem");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -112,22 +111,24 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 913, Short.MAX_VALUE)
-            .addComponent(jSeparator1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 914, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jSeparator1)))
                 .addContainerGap())
         );
 
@@ -140,22 +141,20 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
         File fileTemp = selectFile(filter);
         if (fileTemp != null) {
             String path = fileTemp.getAbsolutePath();
-            backgroundService.getBackground().setImage(path);
+            backgroundService.setImage(path);
             backgroundImage.setIcon(getIconFromBackground());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void backgroundImageMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundImageMousePressed
-        // TODO add your handling code here:
-        active = true;
+        // TODO add your handling code here:        
         evt.getComponent().setCursor(new Cursor(Cursor.MOVE_CURSOR));
         x = evt.getX();
         y = evt.getY();
     }//GEN-LAST:event_backgroundImageMousePressed
 
     private void backgroundImageMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundImageMouseReleased
-        // TODO add your handling code here:
-        active = false;
+        // TODO add your handling code here:        
         evt.getComponent().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_backgroundImageMouseReleased
 
@@ -166,15 +165,15 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
         x = evt.getX();
         y = evt.getY();
         
-        backgroundService.getBackground().moveX(moveX);
-        backgroundService.getBackground().moveY(moveY);
+        backgroundService.moveX(moveX);
+        backgroundService.moveY(moveY);
         
        updateBackgroundLabel();
     }//GEN-LAST:event_backgroundImageMouseDragged
 
     private void backgroundImageMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_backgroundImageMouseWheelMoved
         // TODO add your handling code here:
-        backgroundService.getBackground().setScale(evt.getPreciseWheelRotation());
+        backgroundService.setZoom(evt.getPreciseWheelRotation());
         updateBackgroundLabel();
     }//GEN-LAST:event_backgroundImageMouseWheelMoved
 
@@ -183,7 +182,7 @@ public class BackgroundFrame extends javax.swing.JInternalFrame {
     }
     
     private Icon getIconFromBackground() {
-        ImageIcon icon = new ImageIcon(backgroundService.getBackground().getBackground());
+        ImageIcon icon = new ImageIcon(backgroundService.getBackground());
 
         return icon;
     }

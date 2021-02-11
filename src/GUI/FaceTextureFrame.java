@@ -6,9 +6,15 @@
 package GUI;
 
 import Util.ClassImages;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Collections;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -29,7 +35,9 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
 
     private FaceTextureService faceTextureService;
     private BackgroundService backgroundService;
+    private BackgroundService newFaceTexture;
     private int indexFaceTexture = 0;
+    private int x, y;
 
     /**
      * Creates new form FaceTextureFrame
@@ -37,7 +45,9 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
     public FaceTextureFrame(FaceTextureService faceTextureService, BackgroundService backgroundService) {
         this.faceTextureService = faceTextureService;
         this.backgroundService = backgroundService;
+        this.newFaceTexture = new BackgroundService("images/vazio.png", 125, 160);
         initComponents();
+        generateFaceTextureLabel();
     }
 
     /**
@@ -50,36 +60,11 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         faceTextureChooser = new javax.swing.JFileChooser();
+        faceTextureInternalFrame = new javax.swing.JDialog();
+        labelNewFaceTexture = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel2 = new javax.swing.JPanel();
-        face1 = new javax.swing.JLabel();
-        face2 = new javax.swing.JLabel();
-        face3 = new javax.swing.JLabel();
-        face4 = new javax.swing.JLabel();
-        face5 = new javax.swing.JLabel();
-        face6 = new javax.swing.JLabel();
-        face7 = new javax.swing.JLabel();
-        face8 = new javax.swing.JLabel();
-        face9 = new javax.swing.JLabel();
-        face10 = new javax.swing.JLabel();
-        face11 = new javax.swing.JLabel();
-        face12 = new javax.swing.JLabel();
-        face13 = new javax.swing.JLabel();
-        face14 = new javax.swing.JLabel();
-        face15 = new javax.swing.JLabel();
-        face16 = new javax.swing.JLabel();
-        face17 = new javax.swing.JLabel();
-        face18 = new javax.swing.JLabel();
-        face19 = new javax.swing.JLabel();
-        face20 = new javax.swing.JLabel();
-        face21 = new javax.swing.JLabel();
-        face22 = new javax.swing.JLabel();
-        face23 = new javax.swing.JLabel();
-        face24 = new javax.swing.JLabel();
-        face25 = new javax.swing.JLabel();
-        face26 = new javax.swing.JLabel();
-        face27 = new javax.swing.JLabel();
-        face28 = new javax.swing.JLabel();
+        facePanel = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel1 = new javax.swing.JPanel();
@@ -89,242 +74,85 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
         showClassCheckBox = new javax.swing.JCheckBox();
         nameFaceTexture = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+
+        faceTextureChooser.setMultiSelectionEnabled(true);
+
+        faceTextureInternalFrame.setTitle("Alterar Imagem");
+        faceTextureInternalFrame.setMaximumSize(new java.awt.Dimension(225, 270));
+        faceTextureInternalFrame.setMinimumSize(new java.awt.Dimension(225, 270));
+        faceTextureInternalFrame.setModal(true);
+        faceTextureInternalFrame.setName("Alterar Imagem"); // NOI18N
+        faceTextureInternalFrame.setPreferredSize(new java.awt.Dimension(225, 270));
+        faceTextureInternalFrame.setResizable(false);
+
+        labelNewFaceTexture.setMaximumSize(new java.awt.Dimension(125, 160));
+        labelNewFaceTexture.setMinimumSize(new java.awt.Dimension(125, 160));
+        labelNewFaceTexture.setPreferredSize(new java.awt.Dimension(125, 160));
+        labelNewFaceTexture.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                labelNewFaceTextureMouseDragged(evt);
+            }
+        });
+        labelNewFaceTexture.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                labelNewFaceTextureMouseWheelMoved(evt);
+            }
+        });
+        labelNewFaceTexture.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                labelNewFaceTextureMousePressed(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                labelNewFaceTextureMouseReleased(evt);
+            }
+        });
+
+        jButton6.setText("Salvar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout faceTextureInternalFrameLayout = new javax.swing.GroupLayout(faceTextureInternalFrame.getContentPane());
+        faceTextureInternalFrame.getContentPane().setLayout(faceTextureInternalFrameLayout);
+        faceTextureInternalFrameLayout.setHorizontalGroup(
+            faceTextureInternalFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(faceTextureInternalFrameLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addGroup(faceTextureInternalFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelNewFaceTexture, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
+        );
+        faceTextureInternalFrameLayout.setVerticalGroup(
+            faceTextureInternalFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(faceTextureInternalFrameLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelNewFaceTexture, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
 
         setTitle("FaceTexture");
+        setPreferredSize(new java.awt.Dimension(1200, 770));
 
-        jPanel2.setLayout(new java.awt.GridLayout(4, 7, 5, 5));
-
-        face1.setIcon(getIconFromFaceTexture(0));
-        face1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face1MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face1);
-
-        face2.setIcon(getIconFromFaceTexture(1));
-        face2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face2MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face2);
-
-        face3.setIcon(getIconFromFaceTexture(2));
-        face3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face3MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face3);
-
-        face4.setIcon(getIconFromFaceTexture(3));
-        face4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face4MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face4);
-
-        face5.setIcon(getIconFromFaceTexture(4));
-        face5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face5MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face5);
-
-        face6.setIcon(getIconFromFaceTexture(5));
-        face6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face6MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face6);
-
-        face7.setIcon(getIconFromFaceTexture(6));
-        face7.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face7MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face7);
-
-        face8.setIcon(getIconFromFaceTexture(7));
-        face8.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face8MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face8);
-
-        face9.setIcon(getIconFromFaceTexture(8));
-        face9.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face9MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face9);
-
-        face10.setIcon(getIconFromFaceTexture(9));
-        face10.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face10MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face10);
-
-        face11.setIcon(getIconFromFaceTexture(10));
-        face11.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face11MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face11);
-
-        face12.setIcon(getIconFromFaceTexture(11));
-        face12.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face12MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face12);
-
-        face13.setIcon(getIconFromFaceTexture(12));
-        face13.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face13MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face13);
-
-        face14.setIcon(getIconFromFaceTexture(13));
-        face14.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face14MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face14);
-
-        face15.setIcon(getIconFromFaceTexture(14));
-        face15.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face15MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face15);
-
-        face16.setIcon(getIconFromFaceTexture(15));
-        face16.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face16MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face16);
-
-        face17.setIcon(getIconFromFaceTexture(16));
-        face17.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face17MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face17);
-
-        face18.setIcon(getIconFromFaceTexture(17));
-        face18.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face18MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face18);
-
-        face19.setIcon(getIconFromFaceTexture(18));
-        face19.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face19MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face19);
-
-        face20.setIcon(getIconFromFaceTexture(19));
-        face20.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face20MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face20);
-
-        face21.setIcon(getIconFromFaceTexture(20));
-        face21.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face21MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face21);
-
-        face22.setIcon(getIconFromFaceTexture(21));
-        face22.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face22MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face22);
-
-        face23.setIcon(getIconFromFaceTexture(22));
-        face23.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face23MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face23);
-
-        face24.setIcon(getIconFromFaceTexture(23));
-        face24.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face24MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face24);
-
-        face25.setIcon(getIconFromFaceTexture(24));
-        face25.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face25MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face25);
-
-        face26.setIcon(getIconFromFaceTexture(25));
-        face26.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face26MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face26);
-
-        face27.setIcon(getIconFromFaceTexture(26));
-        face27.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face27MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face27);
-
-        face28.setIcon(getIconFromFaceTexture(27));
-        face28.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                face28MouseClicked(evt);
-            }
-        });
-        jPanel2.add(face28);
-
-        jScrollPane1.setViewportView(jPanel2);
+        facePanel.setLayout(new java.awt.GridLayout(0, 7, 5, 5));
+        jScrollPane1.setViewportView(facePanel);
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jPanel3.setMaximumSize(new java.awt.Dimension(930, 736));
         jPanel3.setMinimumSize(new java.awt.Dimension(930, 736));
         jPanel3.setOpaque(false);
+
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jLabel2.setText("Arquivo Nome");
 
@@ -347,6 +175,41 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
         nameFaceTexture.setText("name");
 
         jButton2.setText("Alterar Imagem");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Importar Face Textures");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Remover");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Mover");
+
+        jButton4.setText("Anterior");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Avançar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -356,20 +219,29 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(nameFaceTexture, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(showClassCheckBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(classComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 680, Short.MAX_VALUE)))
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(showClassCheckBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(10, 10, 10)
+                                    .addComponent(classComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jButton2)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -385,9 +257,19 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
                     .addComponent(classComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(showClassCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton3)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 437, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -396,166 +278,25 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
-        getContentPane().add(jPanel3, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(jPanel3, java.awt.BorderLayout.LINE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void face1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face1MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 0);
-
-    }//GEN-LAST:event_face1MouseClicked
-
-    private void face2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face2MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 1);
-    }//GEN-LAST:event_face2MouseClicked
-
-    private void face3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face3MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 2);
-    }//GEN-LAST:event_face3MouseClicked
-
-    private void face4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face4MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 3);
-    }//GEN-LAST:event_face4MouseClicked
-
-    private void face5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face5MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 4);
-    }//GEN-LAST:event_face5MouseClicked
-
-    private void face6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face6MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 5);
-    }//GEN-LAST:event_face6MouseClicked
-
-    private void face7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face7MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 6);
-    }//GEN-LAST:event_face7MouseClicked
-
-    private void face8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face8MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 7);
-    }//GEN-LAST:event_face8MouseClicked
-
-    private void face9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face9MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 8);
-    }//GEN-LAST:event_face9MouseClicked
-
-    private void face10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face10MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 9);
-    }//GEN-LAST:event_face10MouseClicked
-
-    private void face11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face11MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 10);
-    }//GEN-LAST:event_face11MouseClicked
-
-    private void face12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face12MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 11);
-    }//GEN-LAST:event_face12MouseClicked
-
-    private void face13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face13MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 12);
-    }//GEN-LAST:event_face13MouseClicked
-
-    private void face14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face14MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 13);
-    }//GEN-LAST:event_face14MouseClicked
-
-    private void face15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face15MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 14);
-    }//GEN-LAST:event_face15MouseClicked
-
-    private void face16MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face16MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 15);
-    }//GEN-LAST:event_face16MouseClicked
-
-    private void face17MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face17MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 16);
-    }//GEN-LAST:event_face17MouseClicked
-
-    private void face18MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face18MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 17);
-    }//GEN-LAST:event_face18MouseClicked
-
-    private void face19MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face19MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 18);
-    }//GEN-LAST:event_face19MouseClicked
-
-    private void face20MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face20MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 19);
-    }//GEN-LAST:event_face20MouseClicked
-
-    private void face21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face21MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 20);
-    }//GEN-LAST:event_face21MouseClicked
-
-    private void face22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face22MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 21);
-    }//GEN-LAST:event_face22MouseClicked
-
-    private void face23MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face23MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 22);
-    }//GEN-LAST:event_face23MouseClicked
-
-    private void face24MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face24MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 23);
-    }//GEN-LAST:event_face24MouseClicked
-
-    private void face25MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face25MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 24);
-    }//GEN-LAST:event_face25MouseClicked
-
-    private void face26MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face26MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 25);
-    }//GEN-LAST:event_face26MouseClicked
-
-    private void face27MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face27MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 26);
-    }//GEN-LAST:event_face27MouseClicked
-
-    private void face28MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_face28MouseClicked
-        // TODO add your handling code here:
-        setIndexFaceTexture(evt, 27);
-    }//GEN-LAST:event_face28MouseClicked
 
     private void showClassCheckBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showClassCheckBoxItemStateChanged
         // TODO add your handling code here:
@@ -569,25 +310,137 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_classComboBoxItemStateChanged
 
-    private void updateChangeFaceTexture() {
-        FaceTexture faceTextureTemp = faceTextureService.getFaceTexture(indexFaceTexture);
-        nameFaceTexture.setText(faceTextureTemp.getName());
-        classComboBox.setSelectedItem(faceTextureTemp.getClasse());
-        showClassCheckBox.setSelected(faceTextureTemp.isShowClasse());
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP Images", "bmp");
+        faceTextureChooser.setFileFilter(filter);
+        int returnVal = faceTextureChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File[] files = faceTextureChooser.getSelectedFiles();
+            for (File file : files) {
+                FaceTexture newFaceTexture = new FaceTexture();
+                newFaceTexture.setName(file.getName());
+                newFaceTexture.setImage(file.getAbsolutePath());
+                newFaceTexture.setClasse("Null");
+                faceTextureService.addFaceTexture(newFaceTexture);
+            }
+        }
+        generateFaceTextureLabel();
+        updateChangeFaceTexture();
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:  
+        if (faceTextureService.getFaceTextures().size() > 1) {
+            faceTextureService.getFaceTextures().remove(indexFaceTexture);
+            generateFaceTextureLabel();
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if (indexFaceTexture > 0) {
+            Collections.swap(faceTextureService.getFaceTextures(), indexFaceTexture, indexFaceTexture - 1);
+            indexFaceTexture--;
+            generateFaceTextureLabel();
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        if (indexFaceTexture < (faceTextureService.getFaceTextures().size() - 1)) {
+            Collections.swap(faceTextureService.getFaceTextures(), indexFaceTexture, indexFaceTexture + 1);
+            indexFaceTexture++;
+            generateFaceTextureLabel();
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Images", "bmp", "jpg", "jpeg", "png");
+        File file = selectFile(filter);
+        if (file != null && filter.accept(file)) {
+            newFaceTexture.setImage(file.getAbsolutePath());
+            updateNewFaceTextureLabel();
+            faceTextureInternalFrame.setVisible(true);   
+            
+        }
+
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void labelNewFaceTextureMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelNewFaceTextureMousePressed
+        // TODO add your handling code here:
+        evt.getComponent().setCursor(new Cursor(Cursor.MOVE_CURSOR));
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_labelNewFaceTextureMousePressed
+
+    private void labelNewFaceTextureMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelNewFaceTextureMouseReleased
+        // TODO add your handling code here:
+        evt.getComponent().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }//GEN-LAST:event_labelNewFaceTextureMouseReleased
+
+    private void labelNewFaceTextureMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelNewFaceTextureMouseDragged
+        // TODO add your handling code here:
+        int moveX = evt.getX() - x;
+        int moveY = evt.getY() - y;
+        x = evt.getX();
+        y = evt.getY();
+
+        newFaceTexture.moveX(moveX);
+        newFaceTexture.moveY(moveY);
+
+        updateNewFaceTextureLabel();
+    }//GEN-LAST:event_labelNewFaceTextureMouseDragged
+
+    private void labelNewFaceTextureMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_labelNewFaceTextureMouseWheelMoved
+        // TODO add your handling code here:
+        newFaceTexture.setZoom(evt.getPreciseWheelRotation());
+        updateNewFaceTextureLabel();
+    }//GEN-LAST:event_labelNewFaceTextureMouseWheelMoved
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        faceTextureService.getFaceTexture(indexFaceTexture).setImage(newFaceTexture.getBackground());
+        faceTextureInternalFrame.setVisible(false);
+        generateFaceTextureLabel();
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void updateNewFaceTextureLabel() {
+        labelNewFaceTexture.setIcon(getIconFromFaceTexture());
     }
 
-    private Icon getIconFromFaceTexture(int index) {
-        ImageIcon icon = new ImageIcon(faceTextureService.getFaceTexture(index).getImage(125,160));
+    private Icon getIconFromFaceTexture() {
+        ImageIcon icon = new ImageIcon(newFaceTexture.getBackground());
 
         return icon;
     }
 
-    private ComboBoxModel getClassBDO() {        
+    private void updateChangeFaceTexture() {
+
+        FaceTexture faceTextureTemp = faceTextureService.getFaceTexture(indexFaceTexture);
+        nameFaceTexture.setText(faceTextureTemp.getName());
+        classComboBox.setSelectedItem(faceTextureTemp.getClasse());
+        showClassCheckBox.setSelected(faceTextureTemp.isShowClasse());
+
+    }
+
+    private Icon getIconFromFaceTexture(int index) {
+        ImageIcon icon = new ImageIcon(faceTextureService.getFaceTexture(index).getImage(125, 160));
+
+        return icon;
+    }
+
+    private ComboBoxModel getClassBDO() {
         return new DefaultComboBoxModel(ClassImages.getAllClass());
     }
 
     private void setIndexFaceTexture(MouseEvent event, int index) {
         this.indexFaceTexture = index;
+        //((JLabel) event.getComponent()).setBorder(BorderFactory.createLineBorder(Color.black));
+        focusLabel((JLabel) event.getComponent());
         updateChangeFaceTexture();
         if (event.getClickCount() == 2 && event.getButton() == MouseEvent.BUTTON1) {
             FileNameExtensionFilter filter = new FileNameExtensionFilter("BMP Images", "bmp");
@@ -597,10 +450,24 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
                 faceTextureService.getFaceTexture(indexFaceTexture).setImage(file.getAbsolutePath());
             }
             if (event.getComponent() instanceof JLabel) {
-                ((JLabel) event.getComponent()).setIcon(getIconFromFaceTexture(indexFaceTexture));
+                JLabel label = (JLabel) event.getComponent();
+                label.setIcon(getIconFromFaceTexture(indexFaceTexture));
+
             }
         }
 
+    }
+
+    private void focusLabel(JLabel focus) {
+        for (Component component : facePanel.getComponents()) {
+            if (component instanceof JLabel) {
+                JLabel label = (JLabel) component;
+                label.setOpaque(false);
+                label.setBorder(BorderFactory.createEmptyBorder());
+            }
+        }
+        focus.setOpaque(true);
+        focus.setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
     private File selectFile(FileFilter filter) {
@@ -617,46 +484,47 @@ public class FaceTextureFrame extends javax.swing.JInternalFrame {
         return fileReturn;
     }
 
+    private void generateFaceTextureLabel() {
+        facePanel.removeAll();
+        faceTextureService.getFaceTextures().forEach(faceTexture -> {
+            facePanel.add(faceTextureFromLabel(faceTexture, faceTextureService.getFaceTextures().indexOf(faceTexture)));
+            facePanel.updateUI();
+        });
+    }
+
+    private JLabel faceTextureFromLabel(FaceTexture faceTexture, int index) {
+        JLabel label = new JLabel();
+        label.setIcon(new ImageIcon(faceTexture.getImage(125, 160)));
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                setIndexFaceTexture(evt, index);
+            }
+        });
+        label.setBackground(Color.orange);
+        return label;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> classComboBox;
-    private javax.swing.JLabel face1;
-    private javax.swing.JLabel face10;
-    private javax.swing.JLabel face11;
-    private javax.swing.JLabel face12;
-    private javax.swing.JLabel face13;
-    private javax.swing.JLabel face14;
-    private javax.swing.JLabel face15;
-    private javax.swing.JLabel face16;
-    private javax.swing.JLabel face17;
-    private javax.swing.JLabel face18;
-    private javax.swing.JLabel face19;
-    private javax.swing.JLabel face2;
-    private javax.swing.JLabel face20;
-    private javax.swing.JLabel face21;
-    private javax.swing.JLabel face22;
-    private javax.swing.JLabel face23;
-    private javax.swing.JLabel face24;
-    private javax.swing.JLabel face25;
-    private javax.swing.JLabel face26;
-    private javax.swing.JLabel face27;
-    private javax.swing.JLabel face28;
-    private javax.swing.JLabel face3;
-    private javax.swing.JLabel face4;
-    private javax.swing.JLabel face5;
-    private javax.swing.JLabel face6;
-    private javax.swing.JLabel face7;
-    private javax.swing.JLabel face8;
-    private javax.swing.JLabel face9;
+    private javax.swing.JPanel facePanel;
     private javax.swing.JFileChooser faceTextureChooser;
+    private javax.swing.JDialog faceTextureInternalFrame;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel labelNewFaceTexture;
     private javax.swing.JLabel nameFaceTexture;
     private javax.swing.JCheckBox showClassCheckBox;
     // End of variables declaration//GEN-END:variables
