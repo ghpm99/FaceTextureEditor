@@ -39,7 +39,8 @@ public enum ClassImages {
     VALKYRIE("Valkyrie"),
     WARRIOR("Warrior"),
     WITCH("Witch"),
-    WIZARD("Wizard");
+    WIZARD("Wizard"),
+    SAGE("Sage");
 
     private URL path;
     private String name;
