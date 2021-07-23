@@ -27,7 +27,7 @@ import model.FaceTexture;
 public class SaveService {
 
     private String saveFile;
-    private String path = System.getProperty("java.io.tmpdir") + "/facetexture/";
+    private String path = System.getProperty("user.dir") + "/facetexture/";
     private Properties prop;
 
     public SaveService() {
